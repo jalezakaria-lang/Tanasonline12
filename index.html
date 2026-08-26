@@ -56,34 +56,30 @@
       isLoggedIn: false,
       user: null,
       
-      // Data Riwayat Penugasan (KOSONG)
       riwayatPenugasan: [],
 
-      // Form Data Generator dengan Default Identitas Inspektorat Daerah Kota Malang
       formData: {
         namaInstansi: 'PEMERINTAH KOTA MALANG',
         unitKerja: 'INSPEKTORAT DAERAH',
-        alamatInstansi: 'Jl. Gajahmada No. 2A, Kiduldalem, Kec. Klojen, Kota Malang, Jawa Timur 65119',
-        nomorSurat: '090 / 1001 / 35.73.050 / 2026',
-        namaPegawai: '',
-        nipPegawai: '',
-        pangkatGol: '',
-        jabatan: '',
+        alamatInstansi: 'Jalan Simpang Majapahit Nomor 1, Kiduldalem, Klojen, Kota Malang, Jawa Timur 65119,\nTelepon (0341) 364450, Faksimile (0341) 364450,\nLaman inspektoratdaerah.malangkota.go.id, Pos-el inspektoratmalangkota@gmail.com',
+        nomorSurat: '800.1.11.1/       /35.73.300/2026',
+        dasarSurat: '',
+        
+        // Array Pegawai yang Ditugaskan (KOSONG DEFAULT)
+        pegawaiList: [
+          { nama: '', nip: '', pangkatGol: '', jabatan: '' }
+        ],
+
         maksudTugas: '',
-        tujuan: '',
-        tglBerangkat: '',
-        tglKembali: '',
-        lamaTugas: '',
-        alatAngkut: 'Kendaraan Dinas',
-        bebanAnggaran: 'APBD Kota Malang TA 2026',
-        kotaTanggal: 'Malang, 26 Agustus 2026',
-        jabatanPenandatangan: 'Inspektur Daerah Kota Malang',
-        namaPenandatangan: '[Nama Inspektur]',
-        nipPenandatangan: '[NIP Inspektur]'
+        laporanTugas: 'Melaporkan hasil pelaksanaan tugas kepada Plt. Inspektur Daerah.',
+        kotaTanggal: '',
+        jabatanPenandatangan: 'Plt. Inspektur Daerah,',
+        namaPenandatangan: '',
+        pangkatPenandatangan: '',
+        nipPenandatangan: ''
       }
     };
 
-    // Router Utama
     function renderApp() {
       const appNode = document.getElementById('app');
       if (state.currentPage === 'landing') {
@@ -100,7 +96,6 @@
       renderApp();
     }
 
-    // Auth & Modal Handler
     function toggleLoginModal(show) {
       const modal = document.getElementById('loginModal');
       if (show) modal.classList.remove('hidden');
@@ -122,7 +117,6 @@
       navigateTo('landing');
     }
 
-    // Template Sidebar Navigasi
     function getSidebarHTML(activeMenu) {
       return `
         <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col justify-between min-h-screen no-print">
@@ -158,7 +152,6 @@
       `;
     }
 
-    // 1. HALAMAN DEPAN
     function renderLandingPage(container) {
       container.innerHTML = `
         <header class="bg-white border-b sticky top-0 z-40">
@@ -181,7 +174,7 @@
         <main class="max-w-7xl mx-auto px-4 py-20 text-center flex-grow">
           <span class="bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full border border-blue-100">✨ Inspektorat Daerah Kota Malang</span>
           <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 mt-4 mb-6 leading-tight">Sistem Administrasi Penugasan <br/>& Perjalanan Dinas</h1>
-          <p class="text-slate-600 max-w-2xl mx-auto mb-8 text-base">Platform otomatis pembuatan Surat Tugas dan Surat Perjalanan Dinas (SPD) resmi Inspektorat Daerah Kota Malang.</p>
+          <p class="text-slate-600 max-w-2xl mx-auto mb-8 text-base">Platform pembuatan Surat Tugas resmi Inspektorat Daerah Kota Malang presisi sesuai standard format.</p>
           <div class="flex gap-4 justify-center">
             <button onclick="buatPenugasanBaru()" class="px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition">Buat Penugasan Baru &rarr;</button>
             <button onclick="navigateTo('dashboard')" class="px-8 py-3.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold rounded-xl transition">Buka Dashboard</button>
@@ -190,7 +183,6 @@
       `;
     }
 
-    // 2. HALAMAN DASHBOARD
     function renderDashboardPage(container) {
       const totalPenugasan = state.riwayatPenugasan.length;
       
@@ -209,7 +201,6 @@
               </button>
             </div>
 
-            <!-- Stat Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                 <p class="text-xs font-semibold text-slate-500 uppercase">Total Surat Diterbitkan</p>
@@ -225,7 +216,6 @@
               </div>
             </div>
 
-            <!-- Tabel Riwayat Penugasan -->
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
               <div class="p-4 border-b border-slate-100 flex justify-between items-center">
                 <h2 class="font-bold text-slate-800">Daftar Penugasan Terbaru</h2>
@@ -246,21 +236,17 @@
                     <thead class="bg-slate-50 text-slate-700 uppercase text-xs font-bold border-b">
                       <tr>
                         <th class="p-4">ID / No. Surat</th>
-                        <th class="p-4">Nama Pegawai</th>
+                        <th class="p-4">Jumlah Pegawai</th>
                         <th class="p-4">Maksud Tugas</th>
-                        <th class="p-4">Tujuan</th>
-                        <th class="p-4">Tanggal</th>
                         <th class="p-4 text-center">Aksi</th>
                       </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
                       ${state.riwayatPenugasan.map(item => `
                         <tr class="hover:bg-slate-50">
-                          <td class="p-4 font-mono font-medium text-slate-900">${item.id}</td>
-                          <td class="p-4 font-semibold text-slate-800">${item.namaPegawai}</td>
+                          <td class="p-4 font-mono font-medium text-slate-900">${item.nomorSurat}</td>
+                          <td class="p-4 font-semibold text-slate-800">${item.jumlahPegawai} Orang</td>
                           <td class="p-4 max-w-xs truncate">${item.maksudTugas}</td>
-                          <td class="p-4">${item.tujuan}</td>
-                          <td class="p-4 text-xs whitespace-nowrap">${item.tglBerangkat} s/d ${item.tglKembali}</td>
                           <td class="p-4 text-center">
                             <button onclick="editPenugasan('${item.id}')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs px-3 py-1.5 rounded font-medium">Edit / Cetak</button>
                           </td>
@@ -276,7 +262,6 @@
       `;
     }
 
-    // 3. HALAMAN GENERATOR (EDITOR SURAT)
     function renderGeneratorPage(container) {
       const d = state.formData;
       container.innerHTML = `
@@ -285,7 +270,7 @@
 
           <main class="flex-1 p-6 overflow-y-auto">
             <div class="mb-4 flex justify-between items-center no-print">
-              <span class="text-xs font-bold bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Mode Edit Surat Tugas & SPD</span>
+              <span class="text-xs font-bold bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Mode Edit Surat Tugas</span>
               <button onclick="simpanKeRiwayat()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg shadow transition">
                 Simpan ke Dashboard
               </button>
@@ -295,51 +280,54 @@
               <!-- Form Input -->
               <div class="lg:col-span-5 bg-white p-6 rounded-xl shadow-md h-fit no-print">
                 <h2 class="text-lg font-bold text-slate-800 mb-4 pb-2 border-b">Form Penugasan</h2>
-                <form onsubmit="return false;" class="space-y-4 max-h-[65vh] overflow-y-auto pr-2">
+                <form onsubmit="return false;" class="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
                   
                   <div class="bg-slate-50 p-3 rounded-lg border">
-                    <h3 class="text-xs font-bold text-slate-500 uppercase mb-2">Data Kop Surat</h3>
-                    <div class="grid grid-cols-2 gap-2 text-xs">
-                      <input type="text" id="inputNamaInstansi" value="${d.namaInstansi}" placeholder="Nama Instansi" class="col-span-2 p-2 border rounded" />
-                      <input type="text" id="inputUnitKerja" value="${d.unitKerja}" placeholder="Unit Kerja" class="col-span-2 p-2 border rounded" />
-                      <input type="text" id="inputAlamatInstansi" value="${d.alamatInstansi}" placeholder="Alamat Instansi" class="col-span-2 p-2 border rounded" />
-                      <input type="text" id="inputNomorSurat" value="${d.nomorSurat}" placeholder="Nomor Surat" class="col-span-2 p-2 border rounded" />
+                    <h3 class="text-xs font-bold text-slate-500 uppercase mb-2">Surat & Dasar</h3>
+                    <div class="space-y-2 text-xs">
+                      <div>
+                        <label class="block text-[10px] text-slate-500">Nomor Surat</label>
+                        <input type="text" id="inputNomorSurat" value="${d.nomorSurat}" placeholder="Nomor Surat" class="w-full p-2 border rounded" />
+                      </div>
+                      <div>
+                        <label class="block text-[10px] text-slate-500">Dasar Surat Penugasan</label>
+                        <textarea id="inputDasarSurat" rows="3" placeholder="Contoh: Surat Plt. Inspektur Daerah tanggal 13 November 2025 nomor: 800.1.12.5/1051/35.73.300/2025 hal: Permohonan Narasumber" class="w-full p-2 border rounded">${d.dasarSurat}</textarea>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Dynamic Input Pegawai Ditugaskan -->
+                  <div class="bg-slate-50 p-3 rounded-lg border">
+                    <div class="flex justify-between items-center mb-2">
+                      <h3 class="text-xs font-bold text-slate-500 uppercase">Daftar Pegawai Ditugaskan</h3>
+                      <button onclick="tambahPegawai()" class="text-[11px] bg-blue-50 text-blue-600 hover:bg-blue-100 font-semibold px-2 py-0.5 rounded border border-blue-200">+ Tambah Pegawai</button>
+                    </div>
+                    <div id="pegawaiInputContainer" class="space-y-3">
+                      <!-- Rendered Dynamically -->
                     </div>
                   </div>
 
                   <div class="bg-slate-50 p-3 rounded-lg border">
-                    <h3 class="text-xs font-bold text-slate-500 uppercase mb-2">Data Pegawai Ditugaskan</h3>
-                    <div class="grid grid-cols-2 gap-2 text-xs">
-                      <input type="text" id="inputNamaPegawai" value="${d.namaPegawai}" placeholder="Nama Pegawai" class="col-span-2 p-2 border rounded" />
-                      <input type="text" id="inputNipPegawai" value="${d.nipPegawai}" placeholder="NIP / NIK" class="p-2 border rounded" />
-                      <input type="text" id="inputPangkatGol" value="${d.pangkatGol}" placeholder="Pangkat / Golongan" class="p-2 border rounded" />
-                      <input type="text" id="inputJabatan" value="${d.jabatan}" placeholder="Jabatan" class="col-span-2 p-2 border rounded" />
-                    </div>
-                  </div>
-
-                  <div class="bg-slate-50 p-3 rounded-lg border">
-                    <h3 class="text-xs font-bold text-slate-500 uppercase mb-2">Detail Perjalanan</h3>
-                    <div class="grid grid-cols-2 gap-2 text-xs">
-                      <textarea id="inputMaksudTugas" rows="2" placeholder="Maksud Perjalanan Dinas" class="col-span-2 p-2 border rounded">${d.maksudTugas}</textarea>
-                      <input type="text" id="inputTujuan" value="${d.tujuan}" placeholder="Kota / Tempat Tujuan" class="col-span-2 p-2 border rounded" />
+                    <h3 class="text-xs font-bold text-slate-500 uppercase mb-2">Tujuan & Maksud Tugas</h3>
+                    <div class="space-y-2 text-xs">
                       <div>
-                        <label class="block text-[10px] text-slate-500">Tgl Berangkat</label>
-                        <input type="date" id="inputTglBerangkat" value="${d.tglBerangkat}" class="w-full p-2 border rounded" />
+                        <label class="block text-[10px] text-slate-500">Poin 1: Maksud & Lokasi Tugas</label>
+                        <textarea id="inputMaksudTugas" rows="4" placeholder="Contoh: Melakukan Focus Group Discussion dalam rangka... bertempat di Hotel..." class="w-full p-2 border rounded">${d.maksudTugas}</textarea>
                       </div>
                       <div>
-                        <label class="block text-[10px] text-slate-500">Tgl Kembali</label>
-                        <input type="date" id="inputTglKembali" value="${d.tglKembali}" class="w-full p-2 border rounded" />
+                        <label class="block text-[10px] text-slate-500">Poin 2: Laporan Tugas</label>
+                        <input type="text" id="inputLaporanTugas" value="${d.laporanTugas}" class="w-full p-2 border rounded" />
                       </div>
-                      <input type="text" id="inputLamaTugas" value="${d.lamaTugas}" placeholder="Lama Tugas (misal: 3 Hari)" class="col-span-2 p-2 border rounded" />
                     </div>
                   </div>
 
                   <div class="bg-slate-50 p-3 rounded-lg border">
                     <h3 class="text-xs font-bold text-slate-500 uppercase mb-2">Penandatangan</h3>
                     <div class="grid grid-cols-2 gap-2 text-xs">
-                      <input type="text" id="inputKotaTanggal" value="${d.kotaTanggal}" placeholder="Kota, Tanggal Surat" class="col-span-2 p-2 border rounded" />
+                      <input type="text" id="inputKotaTanggal" value="${d.kotaTanggal}" placeholder="Malang, November 2026" class="col-span-2 p-2 border rounded" />
                       <input type="text" id="inputJabatanPenandatangan" value="${d.jabatanPenandatangan}" placeholder="Jabatan Penandatangan" class="col-span-2 p-2 border rounded" />
                       <input type="text" id="inputNamaPenandatangan" value="${d.namaPenandatangan}" placeholder="Nama Penandatangan" class="col-span-2 p-2 border rounded" />
+                      <input type="text" id="inputPangkatPenandatangan" value="${d.pangkatPenandatangan}" placeholder="Pangkat/Gol (misal: Pembina Utama Muda (IV/c))" class="col-span-2 p-2 border rounded" />
                       <input type="text" id="inputNipPenandatangan" value="${d.nipPenandatangan}" placeholder="NIP Penandatangan" class="col-span-2 p-2 border rounded" />
                     </div>
                   </div>
@@ -352,10 +340,10 @@
                 </div>
               </div>
 
-              <!-- Live Preview Paper -->
+              <!-- Live Preview Paper (Font Arial) -->
               <div class="lg:col-span-7 flex justify-center">
-                <div id="paper" class="bg-white w-full max-w-[210mm] min-h-[297mm] p-10 shadow-2xl border text-black font-serif text-xs leading-normal">
-                  <!-- Dynamic Content -->
+                <div id="paper" class="bg-white w-full max-w-[210mm] min-h-[297mm] p-10 shadow-2xl border text-black font-sans text-[11px] leading-relaxed">
+                  <!-- Dynamic Preview -->
                 </div>
               </div>
             </div>
@@ -363,72 +351,76 @@
         </div>
       `;
 
+      renderPegawaiInputs();
       attachGeneratorEvents();
       renderPreview();
     }
 
-    // LOGIKA PENUGASAN BARU & SIMPAN
+    function renderPegawaiInputs() {
+      const container = document.getElementById('pegawaiInputContainer');
+      if (!container) return;
+
+      container.innerHTML = state.formData.pegawaiList.map((p, idx) => `
+        <div class="p-2 border rounded bg-white relative space-y-1.5 text-xs">
+          <div class="flex justify-between items-center font-bold text-slate-700 text-[11px]">
+            <span>Pegawai #${idx + 1}</span>
+            ${state.formData.pegawaiList.length > 1 ? `<button onclick="hapusPegawai(${idx})" class="text-rose-500 hover:text-rose-700 text-[10px]">Hapus</button>` : ''}
+          </div>
+          <input type="text" placeholder="Nama Lengkap & Gelar" value="${p.nama}" oninput="updatePegawai(${idx}, 'nama', this.value)" class="w-full p-1.5 border rounded" />
+          <input type="text" placeholder="NIP" value="${p.nip}" oninput="updatePegawai(${idx}, 'nip', this.value)" class="w-full p-1.5 border rounded" />
+          <div class="grid grid-cols-2 gap-1.5">
+            <input type="text" placeholder="Pangkat/Gol (contoh: Pembina (IV/a))" value="${p.pangkatGol}" oninput="updatePegawai(${idx}, 'pangkatGol', this.value)" class="p-1.5 border rounded" />
+            <input type="text" placeholder="Jabatan" value="${p.jabatan}" oninput="updatePegawai(${idx}, 'jabatan', this.value)" class="p-1.5 border rounded" />
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function tambahPegawai() {
+      state.formData.pegawaiList.push({ nama: '', nip: '', pangkatGol: '', jabatan: '' });
+      renderPegawaiInputs();
+      renderPreview();
+    }
+
+    function hapusPegawai(idx) {
+      state.formData.pegawaiList.splice(idx, 1);
+      renderPegawaiInputs();
+      renderPreview();
+    }
+
+    function updatePegawai(idx, field, value) {
+      state.formData.pegawaiList[idx][field] = value;
+      renderPreview();
+    }
+
     function buatPenugasanBaru() {
-      const randomId = Math.floor(1000 + Math.random() * 9000);
-      state.formData = {
-        ...state.formData,
-        nomorSurat: `090 / ${randomId} / 35.73.050 / 2026`,
-        namaPegawai: '',
-        nipPegawai: '',
-        pangkatGol: '',
-        jabatan: '',
-        maksudTugas: '',
-        tujuan: '',
-        tglBerangkat: '',
-        tglKembali: '',
-        lamaTugas: ''
-      };
+      state.formData.dasarSurat = '';
+      state.formData.maksudTugas = '';
+      state.formData.pegawaiList = [{ nama: '', nip: '', pangkatGol: '', jabatan: '' }];
       navigateTo('generator');
     }
 
     function simpanKeRiwayat() {
-      if (!state.formData.namaPegawai) {
-        alert('Harap isi nama pegawai terlebih dahulu!');
-        return;
-      }
-
-      const numPart = state.formData.nomorSurat.split('/')[1] ? state.formData.nomorSurat.split('/')[1].trim() : 'NEW';
       const newItem = {
-        id: `SPD-${numPart}`,
-        namaPegawai: state.formData.namaPegawai,
+        id: `ST-${Date.now()}`,
+        nomorSurat: state.formData.nomorSurat,
+        jumlahPegawai: state.formData.pegawaiList.length,
         maksudTugas: state.formData.maksudTugas || '-',
-        tujuan: state.formData.tujuan || '-',
-        tglBerangkat: state.formData.tglBerangkat || '-',
-        tglKembali: state.formData.tglKembali || '-',
-        status: 'Berjalan'
       };
 
       state.riwayatPenugasan.unshift(newItem);
-      alert('Penugasan berhasil disimpan ke dashboard!');
+      alert('Surat tugas berhasil disimpan ke dashboard!');
       navigateTo('dashboard');
     }
 
-    function editPenugasan(id) {
-      const item = state.riwayatPenugasan.find(r => r.id === id);
-      if (item) {
-        state.formData.namaPegawai = item.namaPegawai;
-        state.formData.maksudTugas = item.maksudTugas;
-        state.formData.tujuan = item.tujuan;
-        state.formData.tglBerangkat = item.tglBerangkat;
-        state.formData.tglKembali = item.tglKembali;
-        navigateTo('generator');
-      }
-    }
-
     function attachGeneratorEvents() {
-      const fields = [
-        'NamaInstansi', 'UnitKerja', 'AlamatInstansi', 'NomorSurat',
-        'NamaPegawai', 'NipPegawai', 'PangkatGol', 'Jabatan',
-        'MaksudTugas', 'Tujuan', 'TglBerangkat', 'TglKembali', 'LamaTugas',
-        'KotaTanggal', 'JabatanPenandatangan', 'NamaPenandatangan', 'NipPenandatangan'
+      const simpleFields = [
+        'NomorSurat', 'DasarSurat', 'MaksudTugas', 'LaporanTugas',
+        'KotaTanggal', 'JabatanPenandatangan', 'NamaPenandatangan',
+        'PangkatPenandatangan', 'NipPenandatangan'
       ];
 
-      fields.forEach(f => {
+      simpleFields.forEach(f => {
         const el = document.getElementById(`input${f}`);
         if (el) {
           el.addEventListener('input', (e) => {
@@ -445,30 +437,90 @@
       const d = state.formData;
 
       paper.innerHTML = `
-        <div class="text-center border-b-4 border-double border-black pb-2 mb-4">
-          <h3 class="font-bold text-sm uppercase">${d.namaInstansi || 'PEMERINTAH KOTA MALANG'}</h3>
-          <h2 class="font-bold text-base uppercase">${d.unitKerja || 'INSPEKTORAT DAERAH'}</h2>
-          <p class="text-[10px] italic">${d.alamatInstansi || 'Jl. Gajahmada No. 2A, Kiduldalem, Kec. Klojen, Kota Malang'}</p>
+        <!-- Kop Surat Presisi Sesuai Gambar -->
+        <div class="flex items-center border-b-2 border-black pb-2 mb-4">
+          <div class="w-20 flex-shrink-0 flex justify-center items-center">
+            <!-- Logo Kota Malang Placeholder / SVG Sederhana -->
+            <svg class="w-16 h-16 text-emerald-600" viewBox="0 0 100 100" fill="currentColor">
+              <polygon points="50,5 90,25 90,75 50,95 10,75 10,25" fill="#10B981" />
+              <polygon points="50,15 80,30 80,70 50,85 20,70 20,30" fill="#F59E0B" />
+              <text x="50" y="55" font-size="20" font-weight="bold" fill="white" text-anchor="middle">MALANG</text>
+            </svg>
+          </div>
+          <div class="flex-grow text-center font-sans">
+            <h3 class="font-bold text-base tracking-wider uppercase">${d.namaInstansi}</h3>
+            <h2 class="font-extrabold text-xl tracking-wide uppercase">${d.unitKerja}</h2>
+            <p class="text-[9px] leading-tight mt-0.5 whitespace-pre-line">${d.alamatInstansi}</p>
+          </div>
         </div>
-        <div class="text-center mb-6">
-          <h1 class="font-bold text-sm underline uppercase">SURAT TUGAS</h1>
+
+        <!-- Judul & Nomor Surat -->
+        <div class="text-center my-6">
+          <h1 class="font-bold text-sm tracking-widest uppercase">SURAT TUGAS</h1>
           <p class="text-xs">Nomor: ${d.nomorSurat || '[Nomor Surat]'}</p>
         </div>
-        <p class="mb-3">Yang bertanda tangan di bawah ini memberi tugas kepada:</p>
-        <table class="w-full mb-4 ml-4 text-xs">
-          <tr><td class="w-28 py-0.5">Nama</td><td>: <b>${d.namaPegawai || '[Nama Pegawai]'}</b></td></tr>
-          <tr><td class="py-0.5">NIP / NIK</td><td>: ${d.nipPegawai || '-'}</td></tr>
-          <tr><td class="py-0.5">Pangkat/Gol</td><td>: ${d.pangkatGol || '-'}</td></tr>
-          <tr><td class="py-0.5">Jabatan</td><td>: ${d.jabatan || '-'}</td></tr>
+
+        <!-- Table Dasar -->
+        <table class="w-full mb-4 text-xs">
+          <tr class="align-top">
+            <td class="w-16 font-normal">Dasar</td>
+            <td class="w-4 text-center">:</td>
+            <td class="text-justify leading-relaxed">${d.dasarSurat || '[Isi Dasar Surat Penugasan]'}</td>
+          </tr>
         </table>
-        <p class="mb-4 leading-relaxed">Untuk melaksanakan tugas <b>${d.maksudTugas || '[Maksud Perjalanan Dinas]'}</b> yang berlokasi di <b>${d.tujuan || '[Kota/Tempat Tujuan]'}</b> selama ${d.lamaTugas || '[Lama Tugas]'}.</p>
-        
-        <div class="mt-16 flex justify-end">
-          <div class="text-center w-60">
-            <p>${d.kotaTanggal || 'Malang, 26 Agustus 2026'}</p>
-            <p class="font-bold mb-16">${d.jabatanPenandatangan || 'Inspektur Daerah Kota Malang'}</p>
+
+        <!-- Text MENUGASKAN -->
+        <div class="text-center font-bold tracking-widest my-4 text-xs">
+          MENUGASKAN:
+        </div>
+
+        <!-- Table Kepada (Daftar Pegawai) -->
+        <table class="w-full mb-4 text-xs">
+          <tr class="align-top">
+            <td class="w-16">Kepada</td>
+            <td class="w-4 text-center">:</td>
+            <td>
+              ${d.pegawaiList.map((p, i) => `
+                <div class="flex align-top ${i > 0 ? 'mt-3' : ''}">
+                  <span class="w-6">${i + 1}.</span>
+                  <table class="w-full text-xs">
+                    <tr><td class="w-24">Nama</td><td class="w-3 text-center">:</td><td class="font-bold uppercase">${p.nama || '[Nama Pegawai]'}</td></tr>
+                    <tr><td>NIP</td><td class="text-center">:</td><td>${p.nip || '-'}</td></tr>
+                    <tr><td>Pangkat/Gol</td><td class="text-center">:</td><td>${p.pangkatGol || '-'}</td></tr>
+                    <tr><td>Jabatan</td><td class="text-center">:</td><td>${p.jabatan || '-'}</td></tr>
+                  </table>
+                </div>
+              `).join('')}
+            </td>
+          </tr>
+        </table>
+
+        <!-- Table Untuk (Poin Tugas) -->
+        <table class="w-full mb-8 text-xs">
+          <tr class="align-top">
+            <td class="w-16">Untuk</td>
+            <td class="w-4 text-center">:</td>
+            <td>
+              <div class="flex align-top mb-2">
+                <span class="w-6">1.</span>
+                <div class="text-justify leading-relaxed flex-1">${d.maksudTugas || '[Melakukan Focus Group Discussion dalam rangka...]'}</div>
+              </div>
+              <div class="flex align-top">
+                <span class="w-6">2.</span>
+                <div class="text-justify leading-relaxed flex-1">${d.laporanTugas}</div>
+              </div>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Penandatangan Surat -->
+        <div class="mt-12 flex justify-end">
+          <div class="w-72 text-left text-xs">
+            <p class="ml-12 mb-1">${d.kotaTanggal || 'Malang,   November 2026'}</p>
+            <p class="font-bold mb-16">${d.jabatanPenandatangan || 'Plt. Inspektur Daerah,'}</p>
             <p class="font-bold underline">${d.namaPenandatangan || '[Nama Inspektur]'}</p>
-            <p class="text-[10px]">NIP. ${d.nipPenandatangan || '-'}</p>
+            <p>${d.pangkatPenandatangan || '[Pangkat Penandatangan]'}</p>
+            <p>NIP. ${d.nipPenandatangan || '-'}</p>
           </div>
         </div>
       `;
@@ -478,7 +530,7 @@
       const element = document.getElementById('paper');
       const opt = {
         margin:       10,
-        filename:     `Surat_Tugas_${state.formData.namaPegawai || 'Inspektorat'}.pdf`,
+        filename:     `Surat_Tugas_Inspektorat.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2 },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -486,7 +538,6 @@
       html2pdf().set(opt).from(element).save();
     }
 
-    // Inisialisasi Aplikasi
     document.addEventListener('DOMContentLoaded', renderApp);
   </script>
 </body>
