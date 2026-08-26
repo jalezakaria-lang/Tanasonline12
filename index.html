@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Generator Surat & SPD Otomatis</title>
+  <title>Generator Surat & SPD Otomatis - Inspektorat Kota Malang</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- html2pdf CDN -->
@@ -34,8 +34,8 @@
       </div>
       <form onsubmit="handleLogin(event)" class="space-y-4">
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Username / ID User</label>
-          <input type="text" id="loginUser" required placeholder="Masukkan Username / ID User" class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Username / NIP</label>
+          <input type="text" id="loginUser" required placeholder="Masukkan Username / NIP" class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Kata Sandi</label>
@@ -52,19 +52,19 @@
   <script>
     // State Utama Aplikasi
     const state = {
-      currentPage: 'landing', // 'landing' | 'dashboard' | 'generator'
+      currentPage: 'landing',
       isLoggedIn: false,
       user: null,
       
       // Data Riwayat Penugasan (KOSONG)
       riwayatPenugasan: [],
 
-      // Form Data Generator (SEMUA TEMPLATE DIKOSONGKAN/DIUBAH KE PLACEHOLDER NETRAL)
+      // Form Data Generator dengan Default Identitas Inspektorat Daerah Kota Malang
       formData: {
-        namaInstansi: '',
-        unitKerja: '',
-        alamatInstansi: '',
-        nomorSurat: '',
+        namaInstansi: 'PEMERINTAH KOTA MALANG',
+        unitKerja: 'INSPEKTORAT DAERAH',
+        alamatInstansi: 'Jl. Gajahmada No. 2A, Kiduldalem, Kec. Klojen, Kota Malang, Jawa Timur 65119',
+        nomorSurat: '090 / 1001 / 35.73.050 / 2026',
         namaPegawai: '',
         nipPegawai: '',
         pangkatGol: '',
@@ -74,12 +74,12 @@
         tglBerangkat: '',
         tglKembali: '',
         lamaTugas: '',
-        alatAngkut: '',
-        bebanAnggaran: '',
-        kotaTanggal: '',
-        jabatanPenandatangan: '',
-        namaPenandatangan: '',
-        nipPenandatangan: ''
+        alatAngkut: 'Kendaraan Dinas',
+        bebanAnggaran: 'APBD Kota Malang TA 2026',
+        kotaTanggal: 'Malang, 26 Agustus 2026',
+        jabatanPenandatangan: 'Inspektur Daerah Kota Malang',
+        namaPenandatangan: '[Nama Inspektur]',
+        nipPenandatangan: '[NIP Inspektur]'
       }
     };
 
@@ -111,7 +111,7 @@
       e.preventDefault();
       const userVal = document.getElementById('loginUser').value;
       state.isLoggedIn = true;
-      state.user = { name: userVal || 'Pengguna' };
+      state.user = { name: userVal || 'Admin Inspektorat' };
       toggleLoginModal(false);
       navigateTo('dashboard');
     }
@@ -128,7 +128,7 @@
         <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col justify-between min-h-screen no-print">
           <div>
             <div class="p-5 border-b border-slate-800 flex items-center gap-3">
-              <div class="bg-blue-600 text-white p-2 rounded-lg font-bold text-xs">GS</div>
+              <div class="bg-blue-600 text-white p-2 rounded-lg font-bold text-xs">INSP</div>
               <span class="font-bold text-white text-base tracking-tight">Surat & SPD</span>
             </div>
             <nav class="p-4 space-y-1">
@@ -164,8 +164,8 @@
         <header class="bg-white border-b sticky top-0 z-40">
           <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
             <div class="flex items-center gap-2 cursor-pointer" onclick="navigateTo('landing')">
-              <div class="bg-blue-600 text-white p-2 rounded-lg font-bold text-xs">GS</div>
-              <span class="font-bold text-lg text-slate-900">GeneratorSurat</span>
+              <div class="bg-blue-600 text-white p-2 rounded-lg font-bold text-xs">INSP</div>
+              <span class="font-bold text-lg text-slate-900">Inspektorat Surat System</span>
             </div>
             <div class="flex items-center gap-3">
               <button onclick="navigateTo('dashboard')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold px-4 py-2 rounded-lg transition">Dashboard</button>
@@ -179,9 +179,9 @@
         </header>
 
         <main class="max-w-7xl mx-auto px-4 py-20 text-center flex-grow">
-          <span class="bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full border border-blue-100">✨ Sistem Manajerial Perjalanan Dinas</span>
-          <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 mt-4 mb-6 leading-tight">Kelola & Buat Surat Penugasan <br/>Dalam Hitungan Detik</h1>
-          <p class="text-slate-600 max-w-2xl mx-auto mb-8 text-base">Platform pembuat dokumen instansi otomatis. Buat Surat Tugas dan Surat Perjalanan Dinas (SPD) resmi secara instan.</p>
+          <span class="bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full border border-blue-100">✨ Inspektorat Daerah Kota Malang</span>
+          <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 mt-4 mb-6 leading-tight">Sistem Administrasi Penugasan <br/>& Perjalanan Dinas</h1>
+          <p class="text-slate-600 max-w-2xl mx-auto mb-8 text-base">Platform otomatis pembuatan Surat Tugas dan Surat Perjalanan Dinas (SPD) resmi Inspektorat Daerah Kota Malang.</p>
           <div class="flex gap-4 justify-center">
             <button onclick="buatPenugasanBaru()" class="px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition">Buat Penugasan Baru &rarr;</button>
             <button onclick="navigateTo('dashboard')" class="px-8 py-3.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold rounded-xl transition">Buka Dashboard</button>
@@ -202,7 +202,7 @@
             <div class="flex justify-between items-center mb-8">
               <div>
                 <h1 class="text-2xl font-bold text-slate-900">Dashboard Penugasan</h1>
-                <p class="text-xs text-slate-500">Ringkasan status penugasan dinas pegawai</p>
+                <p class="text-xs text-slate-500">Inspektorat Daerah Kota Malang</p>
               </div>
               <button onclick="buatPenugasanBaru()" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold px-4 py-2 rounded-lg shadow transition">
                 + Penugasan Baru
@@ -300,10 +300,10 @@
                   <div class="bg-slate-50 p-3 rounded-lg border">
                     <h3 class="text-xs font-bold text-slate-500 uppercase mb-2">Data Kop Surat</h3>
                     <div class="grid grid-cols-2 gap-2 text-xs">
-                      <input type="text" id="inputNamaInstansi" value="${d.namaInstansi}" placeholder="Nama Instansi (cth: NAMA INSTANSI)" class="col-span-2 p-2 border rounded" />
-                      <input type="text" id="inputUnitKerja" value="${d.unitKerja}" placeholder="Unit Kerja / Sub-Unit" class="col-span-2 p-2 border rounded" />
-                      <input type="text" id="inputAlamatInstansi" value="${d.alamatInstansi}" placeholder="Alamat Instansi & Kontak" class="col-span-2 p-2 border rounded" />
-                      <input type="text" id="inputNomorSurat" value="${d.nomorSurat}" placeholder="Nomor Surat (cth: 000/000/2026)" class="col-span-2 p-2 border rounded" />
+                      <input type="text" id="inputNamaInstansi" value="${d.namaInstansi}" placeholder="Nama Instansi" class="col-span-2 p-2 border rounded" />
+                      <input type="text" id="inputUnitKerja" value="${d.unitKerja}" placeholder="Unit Kerja" class="col-span-2 p-2 border rounded" />
+                      <input type="text" id="inputAlamatInstansi" value="${d.alamatInstansi}" placeholder="Alamat Instansi" class="col-span-2 p-2 border rounded" />
+                      <input type="text" id="inputNomorSurat" value="${d.nomorSurat}" placeholder="Nomor Surat" class="col-span-2 p-2 border rounded" />
                     </div>
                   </div>
 
@@ -369,11 +369,10 @@
 
     // LOGIKA PENUGASAN BARU & SIMPAN
     function buatPenugasanBaru() {
+      const randomId = Math.floor(1000 + Math.random() * 9000);
       state.formData = {
-        namaInstansi: '',
-        unitKerja: '',
-        alamatInstansi: '',
-        nomorSurat: '',
+        ...state.formData,
+        nomorSurat: `090 / ${randomId} / 35.73.050 / 2026`,
         namaPegawai: '',
         nipPegawai: '',
         pangkatGol: '',
@@ -382,13 +381,7 @@
         tujuan: '',
         tglBerangkat: '',
         tglKembali: '',
-        lamaTugas: '',
-        alatAngkut: '',
-        bebanAnggaran: '',
-        kotaTanggal: '',
-        jabatanPenandatangan: '',
-        namaPenandatangan: '',
-        nipPenandatangan: ''
+        lamaTugas: ''
       };
       navigateTo('generator');
     }
@@ -399,9 +392,9 @@
         return;
       }
 
-      const randomId = Math.floor(1000 + Math.random() * 9000);
+      const numPart = state.formData.nomorSurat.split('/')[1] ? state.formData.nomorSurat.split('/')[1].trim() : 'NEW';
       const newItem = {
-        id: `SPD-${randomId}`,
+        id: `SPD-${numPart}`,
         namaPegawai: state.formData.namaPegawai,
         maksudTugas: state.formData.maksudTugas || '-',
         tujuan: state.formData.tujuan || '-',
@@ -453,9 +446,9 @@
 
       paper.innerHTML = `
         <div class="text-center border-b-4 border-double border-black pb-2 mb-4">
-          <h3 class="font-bold text-sm uppercase">${d.namaInstansi || '[NAMA INSTANSI]'}</h3>
-          <h2 class="font-bold text-base uppercase">${d.unitKerja || '[UNIT KERJA]'}</h2>
-          <p class="text-[10px] italic">${d.alamatInstansi || '[Alamat Instansi / Kontak]'}</p>
+          <h3 class="font-bold text-sm uppercase">${d.namaInstansi || 'PEMERINTAH KOTA MALANG'}</h3>
+          <h2 class="font-bold text-base uppercase">${d.unitKerja || 'INSPEKTORAT DAERAH'}</h2>
+          <p class="text-[10px] italic">${d.alamatInstansi || 'Jl. Gajahmada No. 2A, Kiduldalem, Kec. Klojen, Kota Malang'}</p>
         </div>
         <div class="text-center mb-6">
           <h1 class="font-bold text-sm underline uppercase">SURAT TUGAS</h1>
@@ -472,9 +465,9 @@
         
         <div class="mt-16 flex justify-end">
           <div class="text-center w-60">
-            <p>${d.kotaTanggal || '[Kota, Tanggal]'}</p>
-            <p class="font-bold mb-16">${d.jabatanPenandatangan || '[Jabatan Penandatangan]'}</p>
-            <p class="font-bold underline">${d.namaPenandatangan || '[Nama Penandatangan]'}</p>
+            <p>${d.kotaTanggal || 'Malang, 26 Agustus 2026'}</p>
+            <p class="font-bold mb-16">${d.jabatanPenandatangan || 'Inspektur Daerah Kota Malang'}</p>
+            <p class="font-bold underline">${d.namaPenandatangan || '[Nama Inspektur]'}</p>
             <p class="text-[10px]">NIP. ${d.nipPenandatangan || '-'}</p>
           </div>
         </div>
@@ -485,7 +478,7 @@
       const element = document.getElementById('paper');
       const opt = {
         margin:       10,
-        filename:     `Surat_Tugas_${state.formData.namaPegawai || 'Dokumen'}.pdf`,
+        filename:     `Surat_Tugas_${state.formData.namaPegawai || 'Inspektorat'}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2 },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
